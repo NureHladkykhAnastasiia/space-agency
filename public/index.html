@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSpace Hub - Каталог та управління</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #111827;
+            --bg-card-hover: #1f2937;
+            --border-color: #1e293b;
+            --accent-blue: #1d4ed8;
+            --accent-blue-hover: #2563eb;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --danger: #ef4444;
+            --success: #22c55e;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-main);
+            letter-spacing: 1px;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--text-main);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .car-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .car-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-blue);
+        }
+
+        .car-card-header {
+            background-color: #1f2937;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .car-card-body {
+            padding: 20px;
+        }
+
+        .car-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .car-info {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-bottom: 15px;
+        }
+
+        .car-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .section-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .section-card h2 {
+            font-size: 18px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #1f2937;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        tr:hover td {
+            background-color: var(--bg-card-hover);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) 150px;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        input {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-main);
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+        }
+
+        button {
+            background-color: var(--accent-blue);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: var(--accent-blue-hover);
+        }
+
+        .result-box {
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .error-box {
+            border-color: var(--danger);
+            color: #fca5a5;
+        }
+
+        .success-box {
+            border-color: var(--success);
+            color: #86efac;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">AutoSpace // Hub</div>
+        <nav>
+            <a onclick="switchTab('missions')" id="nav-missions" class="active">Каталог місій</a>
+            <a onclick="switchTab('fleet')" id="nav-fleet">Космічний парк</a>
+            <a onclick="switchTab('database')" id="nav-database">Реєстри бази даних</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- ВКЛАДКА 1: Каталог місій та функції -->
+        <div id="tab-missions" class="tab-content active">
+            <h1>Космічні місії та аналітика</h1>
+            <div class="subtitle">Управління дослідженнями на базі REST API</div>
+
+            <div class="section-card">
+                <h2>1. Актуальні місії та космодроми ( JOIN-запит )</h2>
+                <div id="missionsGrid" class="grid-container"></div>
+            </div>
+
+            <div class="section-card">
+                <h2>3а. Скалярна функція: Кількість астронавтів за обмеженням ID</h2>
+                <div class="form-grid" style="grid-template-columns: 200px 150px;">
+                    <div class="form-group">
+                        <label>Максимальний ID астронавта</label>
+                        <input type="number" id="maxIdInput" value="5">
+                    </div>
+                    <button onclick="getScalarCount()">Виконати</button>
+                </div>
+                <div id="scalarResult" class="result-box" style="display:none;"></div>
+            </div>
+
+            <div class="section-card">
+                <h2>3б. Таблична функція: Склад екіпажу за ID місії</h2>
+                <div class="form-grid" style="grid-template-columns: 200px 150px;">
+                    <div class="form-group">
+                        <label>ID Місії</label>
+                        <input type="number" id="missionIdInput" value="1">
+                    </div>
+                    <button onclick="getTableFunction()">Пошук екіпажу</button>
+                </div>
+                <div id="tableFuncContainer"></div>
+            </div>
+        </div>
+
+        <div id="tab-fleet" class="tab-content">
+            <h1>Космічний парк флотилії</h1>
+            <div class="subtitle">Реєстрація нових транспортних засобів через збережену процедуру</div>
+
+            <div class="section-card">
+                <h2>2 & 4. Додавання корабля (Збережена процедура з обробкою винятків)</h2>
+                <form id="spaceshipForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>ID Корабля</label>
+                            <input type="number" id="shipId" placeholder="Наприклад, 101" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Назва</label>
+                            <input type="text" id="shipName" placeholder="Odyssey-X" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Модель</label>
+                            <input type="text" id="shipModel" placeholder="Heavy-V" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Місткість</label>
+                            <input type="number" id="shipCapacity" placeholder="6" required>
+                        </div>
+                        <button type="submit">Зареєструвати</button>
+                    </div>
+                </form>
+                <div id="procedureResult" class="result-box" style="display:none;"></div>
+            </div>
+        </div>
+
+        <div id="tab-database" class="tab-content">
+            <h1>Реєстри бази даних</h1>
+            <div class="subtitle">Повний перелік сутностей: астронавти, космодроми та кораблі</div>
+
+            <div class="section-card">
+                <h2>Список астронавтів</h2>
+                <div id="astronautsTableContainer">Завантаження...</div>
+            </div>
+
+            <div class="section-card">
+                <h2>Список космодромів</h2>
+                <div id="spaceportsTableContainer">Завантаження...</div>
+            </div>
+
+            <div class="section-card">
+                <h2>Список кораблів</h2>
+                <div id="spaceshipsTableContainer">Завантаження...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(el => el.classList.remove('active'));
+
+            document.getElementById('tab-' + tabName).classList.add('active');
+            document.getElementById('nav-'.concat(tabName)).classList.add('active');
+
+            if (tabName === 'database') {
+                loadAllDatabaseTables();
+            }
+        }
+
+        async function loadMissions() {
+            try {
+                const res = await fetch('/api/missions');
+                const data = await res.json();
+                const grid = document.getElementById('missionsGrid');
+                grid.innerHTML = '';
+                
+                data.forEach(m => {
+                    const dateStr = new Date(m.LaunchDate).toLocaleDateString();
+                    grid.innerHTML += `
+                        <div class="car-card">
+                            <div class="car-card-header">
+                                <span>[ SECURE ARCHIVE ]</span>
+                            </div>
+                            <div class="car-card-body">
+                                <div class="car-title">${m.MissionName}</div>
+                                <div class="car-info">Призначення: ${m.Destination}</div>
+                                <div class="car-price">${dateStr}</div>
+                                <div style="font-size: 12px; color: #9ca3af; border-top: 1px solid #1e293b; padding-top: 10px; margin-top: 10px;">
+                                    Космодром: ${m.SpaceportName || 'N/A'} (${m.SpaceportCountry || 'N/A'})
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error('Помилка завантаження місій', err);
+            }
+        }
+
+        async function loadAllDatabaseTables() {
+    try {
+        const resAst = await fetch('/api/astronauts/all');
+        const astData = await resAst.json();
+        let astHtml = '<table><thead><tr><th>ID</th><th>ПІБ</th><th>Спеціальність</th></tr></thead><tbody>';
+        astData.forEach(a => {
+            astHtml += `<tr><td>${a.Astronaut_ID}</td><td>${a.FullName}</td><td>${a.Specialty}</td></tr>`;
+        });
+        astHtml += '</tbody></table>';
+        document.getElementById('astronautsTableContainer').innerHTML = astHtml;
+
+        const resMis = await fetch('/api/missions');
+        const misData = await resMis.json();
+        let spHtml = '<table><thead><tr><th>ID</th><th>Назва космодрому</th><th>Країна</th></tr></thead><tbody>';
+        misData.forEach(m => {
+            spHtml += `<tr><td>${m.Mission_ID}</td><td>${m.SpaceportName || 'N/A'}</td><td>${m.SpaceportCountry || 'N/A'}</td></tr>`;
+        });
+        spHtml += '</tbody></table>';
+        document.getElementById('spaceportsTableContainer').innerHTML = spHtml;
+
+        const resShips = await fetch('/api/spaceships/all');
+        const shipsData = await resShips.json();
+        if (shipsData.length > 0) {
+            let shipHtml = '<table><thead><tr><th>ID</th><th>Назва</th><th>Модель</th><th>Місткість</th></tr></thead><tbody>';
+            shipsData.forEach(s => {
+                shipHtml += `<tr><td>${s.Ship_ID}</td><td>${s.Name}</td><td>${s.Model}</td><td>${s.Capacity}</td></tr>`;
+            });
+            shipHtml += '</tbody></table>';
+            document.getElementById('spaceshipsTableContainer').innerHTML = shipHtml;
+        } else {
+            document.getElementById('spaceshipsTableContainer').innerHTML = '<div style="color:var(--text-muted); font-size:14px; padding: 10px 0;">Список кораблів наразі порожній. Додайте перший корабель через розділ «Космічний парк».</div>';
+        }
+    } catch (err) {
+        console.error('Помилка завантаження реєстрів', err);
+        document.getElementById('astronautsTableContainer').innerHTML = '<div style="color:var(--danger)">Помилка завантаження даних з сервера.</div>';
+    }
+}
+
+        document.getElementById('spaceshipForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const box = document.getElementById('procedureResult');
+            box.style.display = 'block';
+
+            const payload = {
+                shipId: document.getElementById('shipId').value,
+                name: document.getElementById('shipName').value,
+                model: document.getElementById('shipModel').value,
+                capacity: document.getElementById('shipCapacity').value
+            };
+
+            try {
+                const res = await fetch('/api/spaceships', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                
+                if (!res.ok) throw new Error(data.error);
+
+                box.className = 'result-box success-box';
+                box.innerText = '✓ ' + data.message;
+            } catch (err) {
+                box.className = 'result-box error-box';
+                box.innerText = '✕ Помилка бази даних: ' + err.message;
+            }
+        });
+
+        async function getScalarCount() {
+            const maxId = document.getElementById('maxIdInput').value;
+            const box = document.getElementById('scalarResult');
+            box.style.display = 'block';
+            try {
+                const res = await fetch(`/api/astronauts/count/${maxId}`);
+                const data = await res.json();
+                box.className = 'result-box';
+                box.innerText = `Результат скалярної функції (Кількість астронавтів з ID <= ${maxId}): ${data.CountResult}`;
+            } catch (err) {
+                box.innerText = 'Помилка виконання скалярної функції';
+            }
+        }
+
+        async function getTableFunction() {
+            const missionId = document.getElementById('missionIdInput').value;
+            const container = document.getElementById('tableFuncContainer');
+            try {
+                const res = await fetch(`/api/missions/${missionId}/astronauts`);
+                const data = await res.json();
+                
+                if (data.length === 0) {
+                    container.innerHTML = '<div class="result-box" style="margin-top:15px;">Для цієї місії екіпажу не знайдено.</div>';
+                    return;
+                }
+
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ПІБ Астронавта</th>
+                                <th>Спеціальність</th>
+                                <th>Роль у місії</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+                data.forEach(ast => {
+                    html += `
+                        <tr>
+                            <td>${ast.Astronaut_ID}</td>
+                            <td>${ast.FullName}</td>
+                            <td>${ast.Specialty}</td>
+                            <td>${ast.RoleOnMission}</td>
+                        </tr>
+                    `;
+                });
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            } catch (err) {
+                container.innerHTML = '<div class="result-box error-box" style="margin-top:15px;">Помилка завантаження табличної функції.</div>';
+            }
+        }
+
+        window.onload = loadMissions;
+    </script>
+</body>
+</html>
